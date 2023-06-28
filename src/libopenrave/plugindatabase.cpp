@@ -21,14 +21,14 @@
 #include <functional>
 #include <mutex>
 
-#include <openrave/openraveexception.h>
-#include <openrave/logging.h>
-
 #ifdef HAVE_BOOST_FILESYSTEM
-#include <boost/filesystem.hpp>
-namespace fs = boost::filesystem;
 #endif
 #include <boost/version.hpp>
+#include <filesystem>
+namespace fs = std::filesystem;
+
+#include <openrave/openraveexception.h>
+#include <openrave/logging.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN

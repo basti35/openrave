@@ -1,6 +1,9 @@
 cmake_minimum_required (VERSION 3.0)
 project(OpenRAVE)
 set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -std=c++17")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Define here the needed parameters
 set (OPENRAVE_VERSION_MAJOR 0)
@@ -160,7 +163,7 @@ if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
 endif()
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR COMPILER_IS_CLANG)
-  add_definitions("-fno-strict-aliasing -Wall -Werror=shadow")
+  add_definitions("-fno-strict-aliasing -Wall")
   add_definitions("-Werror=return-type")
 endif()
 
@@ -173,10 +176,10 @@ endif()
 set(OPENRAVE_EXPORT_CXXFLAGS)
 
 if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX OR COMPILER_IS_CLANG)
-  set(CMAKE_CXX_FLAGS_OPTIMIZED "-O3 -DNDEBUG -DBOOST_DISABLE_ASSERTS -D_SECURE_SCL=0") # this practically removes all checks making it a very dangerous options to play with
-  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
-  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g3 -O3 -DNDEBUG")
-  set(CMAKE_CXX_FLAGS_DEBUG "-g3 -D_DEBUG")
+  set(CMAKE_CXX_FLAGS_OPTIMIZED "-O3 -DNDEBUG -DBOOST_DISABLE_ASSERTS -D_SECURE_SCL=0 -std=c++17 -Wshadow=compatible-local") # this practically removes all checks making it a very dangerous options to play with
+  set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -std=c++17 -Wshadow=compatible-local")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g3 -O3 -DNDEBUG -std=c++17 -Wshadow=compatible-local")
+  set(CMAKE_CXX_FLAGS_DEBUG "-g3 -D_DEBUG -std=c++17 -Wshadow=compatible-local")
 
   # the _GLIBCXX_DEBUG flag is very helpful in bounds checking for vector[] and iterators, however it requires all
   # libraries linking with openrave to use it
