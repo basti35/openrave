@@ -203,6 +203,7 @@ except:
 
 import numpy # required for fast eigenvalue computation
 from sympy import *
+from sympy.utilities.iterables import numbered_symbols
 if sympy_version > '0.7.1':
     _zeros, _ones = zeros, ones
     zeros = lambda args: _zeros(*args)
@@ -1306,7 +1307,7 @@ class IKFastSolver(AutoReloader):
             return u'%s: %s'%(self.__class__.__name__, self.value)
         
         def __str__(self):
-            return unicode(self).encode('utf-8')
+            return '{0}: {1}'.format(self.__class__.__name, str(self.value))
         
         def __repr__(self):
             return '<%s(%r)>'%(self.__class__.__name__, self.value)
@@ -2301,7 +2302,7 @@ class IKFastSolver(AutoReloader):
         LinksLeftInv = [self.affineInverse(T) for T in LinksLeft]
         self.testconsistentvalues = None
 
-        self.gsymbolgen = cse_main.numbered_symbols('gconst')
+        self.gsymbolgen = numbered_symbols('gconst')
         self.globalsymbols = []
         self._scopecounter = 0
 
@@ -4112,8 +4113,8 @@ class IKFastSolver(AutoReloader):
         """
         assert(len(leftsideeqs)==len(rightsideeqs))
         # first count the number of different monomials, then try to solve for each of them
-        symbolgen = cse_main.numbered_symbols('const')
-        vargen = cse_main.numbered_symbols('tempvar')
+        symbolgen = numbered_symbols('const')
+        vargen = numbered_symbols('tempvar')
         rightsidedummy = []
         localsymbols = []
         dividesymbols = []
@@ -8287,7 +8288,7 @@ class IKFastSolver(AutoReloader):
         # prioritize finding a solution when var is alone
         returnfirstsolutions = []
         for eq in eqns:
-            symbolgen = cse_main.numbered_symbols('const')
+            symbolgen = numbered_symbols('const')
             eqnew, symbols = self.groupTerms(eq.subs(varsym.subs), vars, symbolgen)
             try:
                 ps = Poly(eqnew,varsym.svar)
@@ -8345,7 +8346,7 @@ class IKFastSolver(AutoReloader):
         if len(eqns) > 1:
             neweqns = []
             listsymbols = []
-            symbolgen = cse_main.numbered_symbols('const')
+            symbolgen = numbered_symbols('const')
             for e in eqns:
                 enew, symbols = self.groupTerms(e.subs(varsym.subs),[varsym.cvar,varsym.svar,var], symbolgen)
                 try:
@@ -8522,7 +8523,7 @@ class IKFastSolver(AutoReloader):
 
         # solve one equation
         for ieq,eq in enumerate(eqns):
-            symbolgen = cse_main.numbered_symbols('const')
+            symbolgen = numbered_symbols('const')
             eqnew, symbols = self.groupTerms(eq.subs(varsym.subs), [varsym.cvar,varsym.svar,varsym.var], symbolgen)
             try:
                 # ignore any equations with degree 3 or more 
@@ -8712,7 +8713,7 @@ class IKFastSolver(AutoReloader):
             raise self.CannotSolveError('not enough equations')
         
         # group equations with single variables
-        symbolgen = cse_main.numbered_symbols('const')
+        symbolgen = numbered_symbols('const')
         orgeqns = []
         allsymbols = []
         for eq in eqns:
@@ -9197,7 +9198,7 @@ class IKFastSolver(AutoReloader):
     def groupTerms(expr,vars,symbolgen = None):
         """Separates all terms that do have var in them"""
         if symbolgen is None:
-            symbolgen = cse_main.numbered_symbols('const')
+            symbolgen = numbered_symbols('const')
         symbols = []
         try:
             p = Poly(expr,*vars)
@@ -9225,7 +9226,7 @@ class IKFastSolver(AutoReloader):
     def replaceNumbers(expr,symbolgen = None):
         """Replaces all numbers with symbols, this is to make gcd faster when fractions get too big"""
         if symbolgen is None:
-            symbolgen = cse_main.numbered_symbols('const')
+            symbolgen = numbered_symbols('const')
         symbols = []
         if expr.is_number:
             result = next(symbolgen)
